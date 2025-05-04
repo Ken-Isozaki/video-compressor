@@ -23,7 +23,7 @@
 
 ## 2. アプリを使う準備<br>
 
-1. 本リポジトリの[vieo-compressor-app.zip](https://github.com/Ken-Isozaki/video-compressor/blob/main/video-compressor-app.zip)をダウンロードして解凍してください。<br>
+1. 本リポジトリの[application/vieo-compressor-app.zip](https://github.com/Ken-Isozaki/video-compressor/blob/main/application/video-compressor-app.zip)をダウンロードして解凍してください。<br>
 2. フォルダ内の exe ファイルをダブルクリックして実行します。<br>
 
 ※ メモ<br>
