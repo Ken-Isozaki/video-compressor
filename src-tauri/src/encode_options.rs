@@ -43,10 +43,9 @@ pub fn build_ffmpeg_args(params: &CompressionParams) -> Vec<String> {
     }
 
     // 解像度設定
-    if let Resolution::Original = params.resolution {
-    } else {
+    if let Some(filter) = params.resolution.scale_filter() {
         args.push("-vf".into());
-        args.push(format!("scale={}:-1", params.resolution.as_str()));
+        args.push(filter);
     }
 
     // 進捗表示のためのオプション
@@ -147,25 +146,31 @@ pub enum Resolution {
 }
 
 impl Resolution {
-    fn as_str(&self) -> &'static str {
+    /// 数値解像度を取得（Original は None）
+    fn as_u32(&self) -> Option<u32> {
         match self {
-            Resolution::Original => "Original",
-            Resolution::W2560 => "2560",
-            Resolution::W1920 => "1920",
-            Resolution::W1680 => "1680",
-            Resolution::W1600 => "1600",
-            Resolution::W1440 => "1440",
-            Resolution::W1280 => "1280",
-            Resolution::W1024 => "1024",
-            Resolution::W960 => "960",
-            Resolution::W800 => "800",
-            Resolution::W720 => "720",
-            Resolution::W640 => "640",
-            Resolution::W576 => "576",
-            Resolution::W480 => "480",
-            Resolution::W320 => "320",
-            Resolution::W240 => "240",
-            Resolution::W160 => "160",
+            Resolution::Original => None,
+            Resolution::W2560 => Some(2560),
+            Resolution::W1920 => Some(1920),
+            Resolution::W1680 => Some(1680),
+            Resolution::W1600 => Some(1600),
+            Resolution::W1440 => Some(1440),
+            Resolution::W1280 => Some(1280),
+            Resolution::W1024 => Some(1024),
+            Resolution::W960 => Some(960),
+            Resolution::W800 => Some(800),
+            Resolution::W720 => Some(720),
+            Resolution::W640 => Some(640),
+            Resolution::W576 => Some(576),
+            Resolution::W480 => Some(480),
+            Resolution::W320 => Some(320),
+            Resolution::W240 => Some(240),
+            Resolution::W160 => Some(160),
         }
+    }
+
+    /// FFmpegのscaleフィルター用の文字列を生成
+    pub fn scale_filter(&self) -> Option<String> {
+        self.as_u32().map(|w| format!("scale=trunc({}/2)*2:-2", w))
     }
 }
